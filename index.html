@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打造第二大脑 - 全书拆解</title>
+<style>
+  :root {
+    --bg: #09090b;
+    --surface: #18181b;
+    --surface-hover: #1f1f23;
+    --border: #27272a;
+    --text: #f4f4f5;
+    --text-muted: #71717a;
+    --accent: #f59e0b;
+    --accent-soft: rgba(245, 158, 11, 0.12);
+    --accent-text: #fbbf24;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 64px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 20px;
+    max-width: 720px;
+  }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 28px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  /* Section */
+  .section { margin-bottom: 80px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    color: var(--text);
+    max-width: 600px;
+  }
+  .section-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .card-accent {
+    border-left: 3px solid var(--accent);
+  }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+  /* Flow */
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+    min-width: 160px;
+    flex: 0 0 auto;
+  }
+  .flow-node strong { display: block; font-size: 1rem; color: var(--accent-text); margin-bottom: 4px; }
+  .flow-node span { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+  .flow-arrow { color: var(--text-muted); font-size: 1.2rem; display: flex; align-items: center; padding-top: 28px; flex-shrink: 0; }
+
+  /* Steps (4-code) */
+  .code-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .code-step {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    border-top: 3px solid var(--border);
+    position: relative;
+  }
+  .code-step:nth-child(1) { border-top-color: var(--accent); }
+  .code-step:nth-child(2) { border-top-color: #e879f9; }
+  .code-step:nth-child(3) { border-top-color: #38bdf8; }
+  .code-step:nth-child(4) { border-top-color: #4ade80; }
+  .code-step-char {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .code-step h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+  .code-step p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+  .code-step .detail { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-muted); }
+  .code-step .detail li { margin-bottom: 4px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th { padding: 12px 16px; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); color: var(--text); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-text); }
+
+  /* Progressive Summarization layers */
+  .ps-layers { display: flex; flex-direction: column; gap: 12px; }
+  .ps-layer {
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .ps-l1 { background: rgba(255, 255, 255, 0.02); margin-left: 0; }
+  .ps-l2 { background: rgba(245, 158, 11, 0.04); margin-left: 24px; border-color: rgba(245, 158, 11, 0.2); }
+  .ps-l3 { background: rgba(245, 158, 11, 0.06); margin-left: 48px; border-color: rgba(245, 158, 11, 0.3); }
+  .ps-l4 { background: rgba(245, 158, 11, 0.08); margin-left: 72px; border-color: rgba(245, 158, 11, 0.4); }
+  .ps-layer h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .ps-layer p { font-size: 0.88rem; color: var(--text-muted); }
+  .ps-layer .timing { font-size: 0.78rem; color: var(--accent); margin-top: 6px; }
+
+  /* Compare (two-column) */
+  .compare-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .compare-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .compare-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+  .compare-col ul { padding-left: 18px; font-size: 0.88rem; line-height: 2.2; color: var(--text-muted); }
+  .compare-col.bad { opacity: 0.7; }
+  .compare-col.good { border-color: rgba(74, 222, 128, 0.25); }
+
+  /* Vertical steps */
+  .vsteps { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .vstep {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 32px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+  .vstep strong { display: block; font-size: 0.95rem; color: var(--accent-text); margin-bottom: 4px; }
+  .vstep span { font-size: 0.85rem; color: var(--text-muted); }
+  .vstep-arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+  /* Quote block */
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    background: rgba(245, 158, 11, 0.06);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0;
+  }
+  blockquote cite { font-size: 0.8rem; font-style: normal; color: var(--text-muted); display: block; margin-top: 8px; }
+
+  /* Mind map */
+  .mindmap-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 24px 0;
+  }
+  .mm-center {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #09090b;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .mm-branch { display: flex; flex-direction: column; gap: 10px; max-width: 180px; }
+  .mm-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 0.84rem;
+  }
+  .mm-item strong { display: block; font-size: 0.82rem; color: var(--accent-text); margin-bottom: 3px; }
+
+  /* Diverge-converge */
+  .dc-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 24px 0;
+  }
+  .dc-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .dc-diverge {
+    border: 3px dashed #e879f9;
+    color: #e879f9;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .dc-converge {
+    border: 3px solid #4ade80;
+    color: #4ade80;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .dc-arrow { font-size: 2rem; color: var(--text-muted); }
+  .dc-desc { text-align: center; margin-top: 10px; font-size: 0.84rem; color: var(--text-muted); }
+
+  /* Strategy cards */
+  .strategy {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px;
+    border-top: 3px solid var(--border);
+  }
+  .strategy:nth-child(1) { border-top-color: var(--accent); }
+  .strategy:nth-child(2) { border-top-color: #e879f9; }
+  .strategy:nth-child(3) { border-top-color: #4ade80; }
+  .strategy h4 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .strategy .eng { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; }
+  .strategy p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* Case cards */
+  .case-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .case-card .name { font-weight: 700; font-size: 1.05rem; color: var(--text); margin-bottom: 2px; }
+  .case-card .role { font-size: 0.82rem; color: var(--accent); margin-bottom: 12px; }
+  .case-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* Habit cards */
+  .habit {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px;
+    border: 1px solid var(--border);
+  }
+  .habit h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .habit .sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; }
+  .habit li { font-size: 0.88rem; color: var(--text-muted); line-height: 1.8; }
+
+  /* Quotes grid */
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 64px 0 40px;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+
+  /* Info callout */
+  .callout {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4, .code-steps, .compare-2, .quotes-grid { grid-template-columns: 1fr; }
+    .hero { padding: 64px 0 48px; }
+    .hero h1 { font-size: 2rem; }
+    .flow-row { flex-direction: column; align-items: stretch; }
+    .flow-arrow { display: none; }
+    .ps-l2 { margin-left: 12px; }
+    .ps-l3 { margin-left: 24px; }
+    .ps-l4 { margin-left: 36px; }
+    .mm-branch { max-width: 100%; }
+    .vstep { max-width: 100%; }
+    .section { margin-bottom: 56px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <p class="hero-eyebrow">Book Breakdown</p>
+  <h1>打造第二大脑</h1>
+  <p class="hero-sub">数字时代的个人知识管理方法论 - 从信息焦虑到创造力释放的系统路径</p>
+  <div class="hero-meta">
+    <span>Tiago Forte</span>
+    <span>10 章</span>
+    <span>约 12.5 万字</span>
+  </div>
+</header>
+
+<!-- ===== MIND MAP ===== -->
+<div class="section">
+  <p class="section-label">Architecture</p>
+  <h2>全书核心框架</h2>
+
+  <div class="mindmap-wrap">
+    <div class="mm-center">第二<br>大脑</div>
+    <div class="mm-branch">
+      <div class="mm-item"><strong>Why</strong>信息爆炸、注意力稀缺、生物大脑不应记账</div>
+      <div class="mm-item"><strong>What</strong>电子札记本 · 知识模块 · 延展认知系统</div>
+    </div>
+    <div class="mm-branch">
+      <div class="mm-item"><strong>How: CODE</strong>抓取 → 组织 → 提炼 → 表达</div>
+      <div class="mm-item"><strong>How: PARA</strong>项目 · 领域 · 资源 · 存档</div>
+    </div>
+    <div class="mm-branch">
+      <div class="mm-item"><strong>Skill</strong>渐进式归纳法(4层) + 发散与聚合模型</div>
+      <div class="mm-item"><strong>Maintain</strong>项目清单 · 定期回顾 · 处处留意</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER LOGIC FLOW ===== -->
+<div class="section">
+  <h2>章节逻辑流</h2>
+
+  <div class="card">
+    <div class="flow-row" style="margin-bottom: 16px;">
+      <div class="flow-node"><strong>Ch 1-2</strong><span>Why: 信息倦怠<br>札记本传统<br>延展认知</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><strong>Ch 3</strong><span>四大超能力<br>CODE 总览<br>识记-联结-创新</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><strong>Ch 4: C</strong><span>抓取<br>重磅信息<br>4标准+12问题</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><strong>Ch 5: O</strong><span>组织<br>PARA 系统<br>以行动为中心</span></div>
+    </div>
+    <div class="flow-row" style="justify-content: flex-end;">
+      <div class="flow-node"><strong>Ch 9-10</strong><span>习惯与路径<br>3大习惯<br>思维模式转变</span></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><strong>Ch 8</strong><span>创新套路<br>发散与聚合<br>3大创作策略</span></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><strong>Ch 7: E</strong><span>表达<br>半熟素材 IP<br>4检索+3阶段</span></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><strong>Ch 6: D</strong><span>提炼<br>渐进式归纳法<br>4层级+毕加索</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CODE METHODOLOGY ===== -->
+<div class="section">
+  <p class="section-label">Core Framework</p>
+  <h2>CODE 信管法则</h2>
+  <p class="section-desc">全书最核心的操作系统，四个步骤构成完整的知识管理闭环。</p>
+
+  <div class="code-steps">
+    <div class="code-step">
+      <div class="code-step-char">C</div>
+      <h4>抓取 Capture</h4>
+      <p>只记录"重磅信息"，即直击内心的内容。不追求全面，不过度囤积。</p>
+      <ul class="detail">
+        <li>启发性 / 实用性 / 个性化 / 新奇性</li>
+        <li>费曼"十二个兴趣问题"法</li>
+      </ul>
+    </div>
+    <div class="code-step">
+      <div class="code-step-char">O</div>
+      <h4>组织 Organize</h4>
+      <p>PARA 系统：按行动和项目组织，而非按主题分类。</p>
+      <ul class="detail">
+        <li>Project / Area / Resource / Archive</li>
+        <li>"信息放在它最有用的地方"</li>
+      </ul>
+    </div>
+    <div class="code-step">
+      <div class="code-step-char">D</div>
+      <h4>提炼 Distill</h4>
+      <p>渐进式归纳法：四层级萃取本质，只在需要时深入。</p>
+      <ul class="detail">
+        <li>原文 → 加粗(<20%) → 高亮(<5%) → 纲要</li>
+        <li>毕加索画牛：先予后取</li>
+      </ul>
+    </div>
+    <div class="code-step">
+      <div class="code-step-char">E</div>
+      <h4>表达 Express</h4>
+      <p>化整为零，将半熟素材拼搭成作品。越早表达，越频反馈。</p>
+      <ul class="detail">
+        <li>4 种检索：搜索/浏览/标签/随缘</li>
+        <li>3 大策略：群岛/桥梁/压缩</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DIVERGE + CONVERGE ===== -->
+<div class="section">
+  <h2>发散与聚合</h2>
+  <p class="section-desc">创作不是一条直线，而是在两种模式之间循环往复。</p>
+
+  <div class="card">
+    <div class="dc-wrap">
+      <div style="text-align:center;">
+        <div class="dc-circle dc-diverge">发散</div>
+        <p class="dc-desc">研究·探索·萌发创意<br>打开视野·不设边界<br><span style="color:#e879f9;">CODE 的 C + O 阶段</span></p>
+      </div>
+      <div class="dc-arrow">←→</div>
+      <div style="text-align:center;">
+        <div class="dc-circle dc-converge">聚合</div>
+        <p class="dc-desc">筛选·排序·交付<br>关上门·砍掉选项<br><span style="color:#4ade80;">CODE 的 D + E 阶段</span></p>
+      </div>
+    </div>
+    <p class="callout">关键洞察：发散和聚合并非线性顺序，而是循环往复，完成一轮聚合后，带着经验进入新的发散周期。</p>
+  </div>
+</div>
+
+<!-- ===== PARA TABLE ===== -->
+<div class="section">
+  <h2>PARA 组织系统</h2>
+  <p class="section-desc">以行动为导向的四层文件夹结构。笔记分类的标准是"放在哪里最有用"。</p>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>层级</th>
+          <th>含义</th>
+          <th>活跃度</th>
+          <th>示例</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-amber">P · 项目</span></td>
+          <td>正在积极进行、有明确截止日期和交付成果的任务</td>
+          <td>High</td>
+          <td>写季度报告、策划发布会、装修书房</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">A · 领域</span></td>
+          <td>需长期维持标准、无明确结束日期的责任区域</td>
+          <td>Medium</td>
+          <td>健康管理、财务管理、职业发展</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">R · 资源</span></td>
+          <td>感兴趣但尚未投入行动的话题或主题</td>
+          <td>Low</td>
+          <td>咖啡知识、摄影技巧、经济学笔记</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">A · 存档</span></td>
+          <td>已完成或暂停的项目，沉静下来的内容</td>
+          <td>Dormant</td>
+          <td>去年的年会项目、旧简历模板</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <p style="font-size: 0.9rem; color: var(--text); font-weight: 600; margin-bottom: 12px;">四条核心原则</p>
+    <div class="grid-4" style="font-size: 0.85rem; color: var(--text-muted);">
+      <div>1. 按项目组织，行动导向</div>
+      <div>2. 信息放在最有用的地方</div>
+      <div>3. 分类不超过四层</div>
+      <div>4. 拥抱混乱与无序</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRESSIVE SUMMARIZATION ===== -->
+<div class="section">
+  <h2>渐进式归纳法</h2>
+  <p class="section-desc">多层级提炼 -- 只在需要时才深入标注，而非一次性做完所有工作。</p>
+
+  <div class="ps-layers">
+    <div class="ps-layer ps-l1">
+      <h4>第一层级：原始摘录</h4>
+      <p>将原文最精彩的部分复制到笔记中。不编辑、不删减、不美化。这是安全网，保证永不丢失原意。</p>
+      <p class="timing">时机：初次抓到信息时</p>
+    </div>
+    <div class="ps-layer ps-l2">
+      <h4>第二层级：加粗重点</h4>
+      <p>通读摘录，将关键词句加粗。控制在原文 10-20% 以内。追随直觉，不做理性分析。</p>
+      <p class="timing">时机：日后重新遇到这篇笔记时</p>
+    </div>
+    <div class="ps-layer ps-l3">
+      <h4>第三层级：高亮精华</h4>
+      <p>仅聚焦粗体部分，将最精华的几句高亮标记。控制在加粗内容的 10-20% 以内。极度挑剔。</p>
+      <p class="timing">时机：准备用于项目创作时</p>
+    </div>
+    <div class="ps-layer ps-l4">
+      <h4>第四层级：纲要总结</h4>
+      <p>在笔记顶部用自己的语言写出纲要总结。解释晦涩术语。参考 L2/L3 即可，不用看全文。</p>
+      <p class="timing">时机：极特殊、爱不释手的笔记</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 20px;">
+    <p style="font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 12px;">常见错误</p>
+    <div class="grid-3" style="font-size: 0.85rem; color: var(--text-muted);">
+      <div><strong style="color: #e879f9;">过度标记重点</strong><br>贪多求全 = 什么都没标记。每层 ≤ 上层的 10-20%。</div>
+      <div><strong style="color: var(--accent-text);">缺乏明确目标</strong><br>不要地毯式提炼所有笔记。只在准备创作时才标注。</div>
+      <div><strong style="color: #38bdf8;">故作高深</strong><br>听从直觉。追随内心的悸动而非理性分析。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3 STRATEGIES ===== -->
+<div class="section">
+  <p class="section-label">Creative Strategies</p>
+  <h2>三大创作策略</h2>
+
+  <div class="grid-3">
+    <div class="strategy">
+      <h4>思想群岛</h4>
+      <p class="eng">Archipelago of Ideas</p>
+      <p>收集足够素材支撑创作，达到关键量后果断切换至聚合模式，在各"岛屿"之间搭建桥梁。本质是数字大纲，可延展、可链接、多媒体、可搜索。</p>
+      <blockquote style="margin-top: 12px;">"不再面对白纸，而是星罗棋布的素材群岛围绕着我，只需在岛屿之间搭建好桥梁。"<cite>Steven Johnson</cite></blockquote>
+    </div>
+    <div class="strategy">
+      <h4>海明威之桥</h4>
+      <p class="eng">Hemingway Bridge</p>
+      <p>在思路明确时停笔，留下下一步线索为明天铺路。结束时写下：下一步想法、当前状态、易忘细节、下一阶段目标。</p>
+      <blockquote style="margin-top: 12px;">"用今天的思路和精力为明天的写作注入动力"<cite>Hemingway 的写作策略</cite></blockquote>
+    </div>
+    <div class="strategy">
+      <h4>压缩范围</h4>
+      <p class="eng">Dial Down the Scope</p>
+      <p>不等完美条件。挑最重要的部分先交付：写书先写网文，研讨会先做免费场，微电影先手机粗剪。被砍内容不会丢失，第二大脑帮你保管。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CASES ===== -->
+<div class="section">
+  <h2>书中典型案例</h2>
+
+  <div class="grid-2">
+    <div class="case-card">
+      <p class="name">Taylor Swift</p>
+      <p class="role">音乐人 · 数字笔记</p>
+      <p>用手机随时随地捕捉一闪而过的歌词和旋律。《空位》来自多年来零散灵感的集大成。启示：创作是思维活动的衍生品，而非孤立事件。</p>
+    </div>
+    <div class="case-card">
+      <p class="name">Octavia Butler</p>
+      <p class="role">科幻作家 · 札记本</p>
+      <p>极度害羞的黑人女孩逆袭为麦克阿瑟天才奖得主。遗物：9,062 项资料，386 个文件盒。用笔记对抗自卑心魔。启示：痛苦是最强烈的创作素材。</p>
+    </div>
+    <div class="case-card">
+      <p class="name">Twyla Tharp</p>
+      <p class="role">编舞家 · 文件盒</p>
+      <p>每个舞蹈项目用一个文件盒收纳所有灵感素材：笔记、视频、剪报、速写。项目完成后存档。启示：有形容器辅助抽象编排，PARA 的精神原型。</p>
+    </div>
+    <div class="case-card">
+      <p class="name">Ken Burns</p>
+      <p class="role">纪录片导演 · 素材筛选</p>
+      <p>原始镜头采用率 40:1 到 50:1。从上百小时素材中挑出最动人的片段。激进筛选后精华成片。启示：提炼即进取。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOUR CAPTURE CRITERIA ===== -->
+<div class="section">
+  <h2>信息抓取四大标准</h2>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>标准</th>
+          <th>判断方式</th>
+          <th>行动信号</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>启发性</td>
+          <td>是否让你产生新的想法？是否让你停下来思考？</td>
+          <td>"有意思！""原来还可以这样！"</td>
+        </tr>
+        <tr>
+          <td>实用性</td>
+          <td>是否能立即应用？是否能解决某个实际问题？</td>
+          <td>"这个用得上！""下次试试看"</td>
+        </tr>
+        <tr>
+          <td>个性化</td>
+          <td>是否与你的工作和生活相关？是否回应你的关切？</td>
+          <td>"这就是我遇到的问题！"</td>
+        </tr>
+        <tr>
+          <td>新奇性</td>
+          <td>是否挑战了你的常识？是否反直觉？</td>
+          <td>"原来不是这样！""颠覆认知"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="callout">终极标准："走心" -- 是否直击内心？诺贝尔奖得主费曼的"十二个兴趣问题"法：随身常备 12 个开放式问题，遇到新信息时测试能否为其中某个问题提供启发。</p>
+</div>
+
+<!-- ===== MINDSET SHIFT ===== -->
+<div class="section">
+  <p class="section-label">Mindset Shift</p>
+  <h2>思维模式的深层转变</h2>
+
+  <div class="compare-2">
+    <div class="compare-col bad">
+      <h4>旧思维：稀缺性</h4>
+      <ul>
+        <li>信息是稀缺资源，越多越好</li>
+        <li>知识需要严密保护，怕被剽窃</li>
+        <li>价值 = 你能随时调用的信息量</li>
+        <li>无差别囤积，害怕错过 (FOMO)</li>
+      </ul>
+    </div>
+    <div class="compare-col good">
+      <h4>新思维：充裕性</h4>
+      <ul>
+        <li>有价值的见解无处不在</li>
+        <li>知识越分享越增值（不是减法）</li>
+        <li>价值 = 你能创造的连接与成果</li>
+        <li>只汲取灵感，不必全盘吸收</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <div class="grid-2">
+      <div>
+        <p style="font-weight: 600; color: var(--accent-text); font-size: 0.95rem; margin-bottom: 8px;">稀缺 → 充裕</p>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">从焦虑地收集一切，到从容地萃取精华。不必吸收全部信息，只需从中汲取智慧。</p>
+      </div>
+      <div>
+        <p style="font-weight: 600; color: #e879f9; font-size: 0.95rem; margin-bottom: 8px;">责任 → 服务</p>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">从独善其身的囤积，到兼济天下的分享。知识的目的在于传播 -- 越传播越强大。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOUR SUPERPOWERS ===== -->
+<div class="section">
+  <p class="section-label">Capabilities</p>
+  <h2>第二大脑的四大超能力</h2>
+
+  <div class="grid-2">
+    <div class="card card-accent">
+      <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">推动抽象思维具象化</h4>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">把模糊的想法转化为可操作、可审视的具体产物。<br>例：沃森和克里克用折纸模型发现 DNA 双螺旋结构。</p>
+    </div>
+    <div class="card card-accent">
+      <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">促进思想的融会贯通</h4>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">创造力在于联结看似无关的想法。跨领域调用素材产生新组合。创新 = 既有元素的混搭重组。</p>
+    </div>
+    <div class="card card-accent">
+      <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">辅助长期决策与规划</h4>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">避免"近期偏差"，用历史积累对抗短期冲动。采用"文火慢焙"渐进积累创意。</p>
+    </div>
+    <div class="card card-accent">
+      <h4 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">形成鲜明而独到的观点</h4>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">未来核心竞争力 = 思想传播。丰富素材支撑独特视角。"拥有观点"比"知道事实"更有价值。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTRAST TABLE ===== -->
+<div class="section">
+  <h2>有无第二大脑的对比</h2>
+
+  <div class="compare-2">
+    <div class="compare-col bad">
+      <h4>没有第二大脑</h4>
+      <ul>
+        <li>任务清单分散在邮件/便签/脑海</li>
+        <li>开会忘带上次会议记录</li>
+        <li>灵感闪过就忘</li>
+        <li>反复查询同样的信息</li>
+        <li>被琐事淹没，无暇思考</li>
+        <li>创意随用随丢，从不复用</li>
+        <li>从零开始每个项目</li>
+      </ul>
+    </div>
+    <div class="compare-col good">
+      <h4>有第二大脑</h4>
+      <ul>
+        <li>所有项目集中管理，一目了然</li>
+        <li>历史记录随时检索调用</li>
+        <li>灵感第一时间存入外脑</li>
+        <li>渐进式归纳让复习只需 30 秒</li>
+        <li>大脑从记忆员升级为 CEO</li>
+        <li>半熟素材可复用，越用越值钱</li>
+        <li>新项目有 80% 前期工作已完成</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DIGITAL NOTES TRAITS ===== -->
+<div class="section">
+  <h2>数字笔记四大特质</h2>
+
+  <div class="flow-row">
+    <div class="flow-node"><strong>多媒体</strong><span>文字/图片/音频/视频<br>比纸质笔记丰富百倍</span></div>
+    <div class="flow-node"><strong>非正式</strong><span>不追求完美排版<br>随手记录，快速迭代</span></div>
+    <div class="flow-node"><strong>开放性</strong><span>可搜索/可链接/可扩展<br>信息永不封存</span></div>
+    <div class="flow-node"><strong>行为导向</strong><span>为行动服务<br>而非为收藏服务</span></div>
+  </div>
+</div>
+
+<!-- ===== THREE HABITS ===== -->
+<div class="section">
+  <h2>三大习惯：维护第二大脑</h2>
+
+  <div class="grid-3">
+    <div class="habit">
+      <h4>项目清单</h4>
+      <p class="sub">启动与收尾的关键节点干预</p>
+      <ul>
+        <li><strong>启动：</strong>记录想法 - 检视文件夹 - 搜索术语 - 移动笔记 - 撰写大纲</li>
+        <li><strong>收尾：</strong>标记完成 - 梳理半熟素材 - 移至存档 - 记录经验教训</li>
+      </ul>
+    </div>
+    <div class="habit">
+      <h4>定期回顾</h4>
+      <p class="sub">每周小结 + 每月回顾</p>
+      <ul>
+        <li><strong>每周(~30min)：</strong>清空邮件 - 检查日历 - 清理桌面 - 更新项目列表</li>
+        <li><strong>每月(~1h)：</strong>审视项目进度 - 更新领域/资源 - 重新评估优先级</li>
+      </ul>
+    </div>
+    <div class="habit">
+      <h4>处处留意</h4>
+      <p class="sub">不失时机地改善笔记的"可见性"</p>
+      <ul>
+        <li>给常用笔记改个更好的标题</li>
+        <li>把孤立的笔记移动到正确文件夹</li>
+        <li>给刚读过的笔记加粗几个关键词</li>
+        <li>收件箱的笔记定期归位</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GETTING STARTED ===== -->
+<div class="section">
+  <h2>推荐上手路径</h2>
+
+  <div class="vsteps">
+    <div class="vstep"><strong>第一步</strong><span>选择笔记应用（Notion / Obsidian / Evernote / Apple Notes），不要纠结工具，先开始</span></div>
+    <div class="vstep-arrow">↓</div>
+    <div class="vstep"><strong>第二步</strong><span>建立 PARA 文件夹，把当前手头的信息归入四个文件夹</span></div>
+    <div class="vstep-arrow">↓</div>
+    <div class="vstep"><strong>第三步</strong><span>开始抓取：选 2-3 种信息源，看到"走心"内容就摘录</span></div>
+    <div class="vstep-arrow">↓</div>
+    <div class="vstep"><strong>第四步</strong><span>准备创作时，用渐进式归纳法提炼要点（加粗 → 高亮 → 纲要）</span></div>
+    <div class="vstep-arrow">↓</div>
+    <div class="vstep"><strong>第五步</strong><span>从小项目开始表达：一篇短文、一张清单、一条分享</span></div>
+    <div class="vstep-arrow">↓</div>
+    <div class="vstep"><strong>第六步</strong><span>养成习惯：项目清单 + 每周回顾 + 处处留意</span></div>
+  </div>
+</div>
+
+<!-- ===== QUOTES ===== -->
+<div class="section">
+  <h2>书中核心观点</h2>
+
+  <div class="quotes-grid">
+    <blockquote>你的大脑是用来产生想法的，不是用来储存想法的。</blockquote>
+    <blockquote>真理不外乎创造。（Verum ipsum factum）</blockquote>
+    <blockquote>知识越传播，越强大。</blockquote>
+    <blockquote>信息是精神食粮，创意是思想的给养。</blockquote>
+    <blockquote>接触信息与改善信息必须同步进行。</blockquote>
+    <blockquote>只启动那些已经完成了 80% 的项目。</blockquote>
+    <blockquote>有舍才能有得：萃取之道即为进取之道。</blockquote>
+    <blockquote>所有未保存的进度将会丢失。</blockquote>
+  </div>
+</div>
+
+<!-- ===== GLOSSARY ===== -->
+<div class="section">
+  <h2>关键概念速查</h2>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+      <thead>
+        <tr>
+          <th>概念</th>
+          <th>英文</th>
+          <th>一句话解释</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>第二大脑</td><td>Second Brain</td><td>电子札记本 -- 集学习笔记、日记、创意于一体的外部知识系统</td></tr>
+        <tr><td>信管法则</td><td>CODE</td><td>抓取(Capture) - 组织(Organize) - 提炼(Distill) - 表达(Express)</td></tr>
+        <tr><td>PARA 系统</td><td>PARA</td><td>项目(Projects) - 领域(Areas) - 资源(Resources) - 存档(Archives)</td></tr>
+        <tr><td>渐进式归纳法</td><td>Progressive Summarization</td><td>4层提炼：原文 - 加粗 - 高亮 - 纲要，按需深入</td></tr>
+        <tr><td>半熟素材</td><td>Intermediate Packets</td><td>可复用的、个别的创作元素，如干货笔记、落选素材、过程文件</td></tr>
+        <tr><td>信息协同</td><td>Stigmergy</td><td>蚁群策略 -- 每次接触信息都留下"印记"，方便未来使用</td></tr>
+        <tr><td>发散与聚合</td><td>Divergence &amp; Convergence</td><td>创作节奏：先打开可能性（发散），再筛选聚焦（聚合）</td></tr>
+        <tr><td>思想群岛</td><td>Archipelago of Ideas</td><td>用数字大纲汇集素材，在各岛屿之间搭建桥梁</td></tr>
+        <tr><td>海明威之桥</td><td>Hemingway Bridge</td><td>在思路明确时停笔，留下下一步线索为明天铺路</td></tr>
+        <tr><td>重磅信息</td><td>Heavy Hitters</td><td>直击内心、引发共鸣的信息 -- 唯一值得记录的内容</td></tr>
+        <tr><td>十二个兴趣问题</td><td>12 Favorite Problems</td><td>费曼的方法：列举开放式问题，用新发现不断测试</td></tr>
+        <tr><td>知识资本</td><td>Knowledge Assets</td><td>将想象力具象化后产生的可复用信息资产</td></tr>
+        <tr><td>知识版图</td><td>Knowledge Map</td><td>像手机地图一样可缩放、可导航的个人知识体系</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>拆解自 Tiago Forte《Building a Second Brain》| 全书约 12.5 万字 | 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
